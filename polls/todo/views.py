@@ -15,7 +15,7 @@ from django.contrib import messages
 
 # Depois de uma hora o usuario é deslogado automaticamente
 
-
+@auto_logout_after_one_hour
 def index(request):
     """ 
     Renderiza o index do site, renderizando o index_login se tiver usuario logado, caso contrario 
