@@ -1,0 +1,11 @@
+{% extends "list.html" %}
+{% block title %}
+<h1>Criar uma nova lista</h1>
+<hr>
+{% endblock title %}
+{% block logout %}
+<li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'logout' %}">Logout</a></li>
+{% endblock logout %}
+{% block login %}
+<li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url "user_info" %}">Olá, {{usuario}}</a></li>
+{% endblock login %}

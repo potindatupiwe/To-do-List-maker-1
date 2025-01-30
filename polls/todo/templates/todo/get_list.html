@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block login %}
+<li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url "user_info" %}">Olá, {{usuario}}</a></li>
+{% endblock login %}
+{% block logout %}
+<li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'logout' %}">Logout</a></li>
+{% endblock logout %}
+{% block content %}
+
+<div class="container">
+<h1>{{lista.titulo}}</h1>
+<p>{{lista.descricao}}</p>
+<p>Data de criação: {{lista.data_criacao}}
+<p>Data da última atualização: {{lista.data_atualizacao}}
+<hr>
+<h4>Tarefas</h4>
+<div class="row row-cols-1 row-cols-md-3 g-4">
+{% for tarefa in tarefas %}
+<div class="col">
+    <div class="card h-100">
+    <div class="card-body">
+      <h5 class="card-title">{{tarefa.titulo}}</h5>
+      <p class="card-text">{{tarefa.descricao}}</p>
+    </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">Data limite para fazer a tarefa ({{tarefa.dataVencimento}})</li>
+      <li class="list-group-item">Prioridade: {{tarefa.prioridade}}</li>
+      <li class="list-group-item">Status: {{tarefa.status}}</li>
+      {% if tarefa.concluido %}<li class="list-group-item">Data de conclusão: {{tarefa.dataConclusao}}</li>{% endif %}
+    </ul>
+    <div class="card-body">
+        <form action="{% url 'set_task' %}" method="POST">{% csrf_token %}
+            <button class="btn btn-danger" type="submit" value="{{tarefa.id}}" name="Deletar">Deletar tarefa</button>
+            <a class="btn btn-primary" href="{% url 'editar_tarefa' tarefa.id %}">Editar tarefa</a>
+        </form>
+    </div>
+</div>
+  </div>
+        
+{% endfor %}
+</div>
+<form action="{% url 'set_task' %}" method="GET">{% csrf_token %}
+    <button class="btn btn-primary mt-3" type="submit" value="{{lista.id}}" name="Enviar">Criar uma nova tarefa</button>
+</form>
+</div>
+
+{% endblock  %}

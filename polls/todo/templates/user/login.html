@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  
+</head>
+<body>
+  <div class="container">
+    <div class="login-box">
+      <h1>Login</h1>
+      <hr>
+      <form action="{% url 'login' %}" method="POST">{% csrf_token %}
+        <div class="mb-3">
+          <label  class="form-label">Username</label>
+          {{form.user}}       
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Password</label>
+          {{form.password}}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+        
+      </form>
+  
+
+      <div class="links">
+        <a href="{% url 'mudarSenha' %}">Recuperar senha</a>
+        <a href="{% url 'register' %}">Cadastre-se</a>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
+{% endblock content %}

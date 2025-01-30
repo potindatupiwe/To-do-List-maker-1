@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block login %}
+      <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'user_info' %}">Olá, {{user.username}}</a></li>
+{% endblock  %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    {% block CSS %}
+    <link rel="stylesheet" href="{% static "user.css" %}">
+    {% endblock CSS %}
+</head>
+<body>
+    {% block content %} 
+    <div class="content">
+        <div class="box">
+        <p>Username: {{user.username}}</p>
+        <hr>
+        <p>Email: {{user.email}}</p>
+        <hr>
+    </div>
+    </div>
+</body>
+</html>
+{% endblock content %}

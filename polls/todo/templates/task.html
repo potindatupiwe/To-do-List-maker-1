@@ -1,0 +1,44 @@
+
+
+{% extends "base.html" %}
+{% block login %}
+<li class="nav-item"><a class="nav-link active" aria-current="page" href="">Olá, {{usuario}}</a></li>
+{% endblock login %}
+{% block content %}
+<form method="POST"> {% csrf_token %}
+   
+<div class="container">
+    <div class="login-box">
+      {% block title %}
+      
+      {% endblock title %}
+      
+      <form method="POST">{% csrf_token %}
+        
+        <div class="mb-3">
+            <label for="exampleInputText" class="form-label">Titulo</label>
+            {{form.titulo}}
+        </div>
+        <div class="mb-3">
+          <label for="exampleInputPassword1" class="form-label">Descrição</label>
+          {{form.descricao}}
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Prioridade</label>
+            {{form.prioridade}}
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Data Limite</label>
+            {{form.dataVencimento}}
+        </div>
+        {% block form %}
+        {% endblock form %}
+        
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</div>
+</form>
+
+
+
+{% endblock content %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block login %}
+    <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url "user_info" %}">Olá, {{usuario}}</a></li>
+{% endblock login %}
+{% block logout %}
+<li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'logout' %}">Logout</a></li>
+{% endblock logout %}
+{% block content %}
+
+{% for lista in listas %}
+    <form action="{% url 'get_list' lista.id %}" method="POST">{% csrf_token %}
+    <ul>
+        
+        <a class="list-group-item list-group-item-action list-group-item-primary" href="{% url "get_list" lista.id %}" >{{lista.titulo}}</a>
+        <a class="btn btn-primary" href="{% url 'editar_lista' lista.id %}">Editar lista</a>
+        <button class="btn btn-danger" type="submit" value="{{lista.id}}" name="Deletar">Deletar lista</button>
+    
+    </ul>
+</form>
+{% endfor %}
+    <a class="btn btn-primary m-4" href="{% url "set_list" %}">Criar uma nova lista</a>
+{% endblock %}

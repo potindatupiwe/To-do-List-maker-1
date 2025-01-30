@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+</head>
+<body>
+
+  <div class="container">
+    <div class="login-box">
+      <h1>Cadastro</h1>
+      <hr>
+      <form method="POST">{% csrf_token %}
+        
+      <div class="mb-3">
+          <label for="exampleInputText" class="form-label">Usuario</label>
+          {{form.username}}
+      </div>
+      <div class="mb-3">
+        <label for="exampleInputText" class="form-label">Senha</label>
+        {{form.password}}
+    </div>
+    <div class="mb-3">
+      <label for="exampleInputText" class="form-label">Email</label>
+      {{form.email}}
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+      </form> 
+
+    </div>
+  </div>
+</body>
+</html>
+{% endblock content %}
