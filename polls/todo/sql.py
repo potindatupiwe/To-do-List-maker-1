@@ -21,10 +21,10 @@ def error(form, url,request, rurl = 'index'):
     else:
         form.save(request)
         return redirect(rurl)
-    user = get_object_or_404(User, pk=request.user.pk)
+   
     context={
         'error':True,
         'form':form,
-        'usuario':user.username
+        'usuario':request.user
         }
     return render(request,f'todo/{url}.html',context)
