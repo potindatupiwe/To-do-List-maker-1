@@ -29,7 +29,7 @@ class RegisterListForm(forms.ModelForm):
         }
     def save(self,request,commit=True):
         lista = super().save(commit=False)
-        lista.usuario = get_object_or_404(User, pk=request.session.get('user'))
+        lista.usuario = get_object_or_404(User, pk=request.user.pk)
         lista.data_criacao = timezone.now()
         lista.data_atualizacao = timezone.now()
         if commit:
