@@ -226,7 +226,7 @@ def editar_tarefa(request, pk):
             messages.error(request,' A tarefa que você tentou acessar não pertence a você')
             context={
                 'form':form,
-                'usuario':tarefa.user,
+                'usuario':request.user,
                 
 
             }
