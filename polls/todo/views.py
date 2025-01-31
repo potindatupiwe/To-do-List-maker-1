@@ -103,15 +103,11 @@ def set_list(request):
     """ Renderiza o formulario para adicionar uma lista """
     form = RegisterListForm()
     if request.method == "GET":
-        try:    
-            user = get_object_or_404(User, pk=request.user.pk)
-        except:
-            return redirect('login')
-        else:
-            return render(request,'todo/set_list.html',{'form':form,'usuario':user.username})
+        return render(request,'todo/set_list.html',{'form':form,'usuario':request.user})
     else:
         form = RegisterListForm(request.POST)
         return error(form, 'set_list',request)
+    
 @auto_logout_after_one_hour
 @login_required
 def getList(request, pk):
@@ -134,6 +130,7 @@ def getList(request, pk):
         else:
             delete(request, Lista)
             return redirect('index')
+        
 @auto_logout_after_one_hour
 @login_required
 def set_task(request):
@@ -176,27 +173,32 @@ def editar_lista(request,pk):
     """ Renderiza o formulario para editar uma lista """
     lista = get_object_or_404(Lista,pk=pk)
     if request.method == "GET":
+        if lista.usuario.pk == request.user.pk:
+            form = UpdateListForm(instance=lista)
+            context = {
+                'form':form,
+                'nome':lista.titulo,
+                'usuario':request.user
+            }
+            return render(request,'todo/update_list.html',context)
+        else:
+            form = UpdateListForm()
+            messages.error(request,' A tarefa que você tentou acessar não pertence a você')
+            context={
+                'form':form,
+                'usuario':request.user,
+            }
+            return render(request, 'todo/update_list.html',context)
 
-        form = UpdateListForm(instance=lista)
-        context = {
-            'form':form,
-            'nome':lista.titulo,
-            'usuario':lista.usuario
-        }
-        return render(request,'todo/update_list.html',context)
     else:
         form = UpdateListForm(request.POST, instance=lista)
-        if lista.usuario.pk == request.user.pk and form.is_valid():
+        if form.is_valid():
             form.save()
             Lista.objects.filter(pk=pk).update(data_atualizacao = timezone.now())
             return redirect('index')
         else:
-            messages.error(request,' A tarefa que você tentou acessar não pertence a você')
-            context={
-                'form':form,
-                'usuario':lista.usuario,
-            }
-            return render(request, 'todo/update_list.html',context)
+            return error(form,'update_list',request, 'editar_lista')
+       
 @auto_logout_after_one_hour            
 @login_required
 def editar_tarefa(request, pk):
