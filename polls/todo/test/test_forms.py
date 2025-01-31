@@ -77,14 +77,14 @@ class RegisterListFormTest(TestCase):
         form_data = {"titulo": "Compras", "descricao": "Lista de supermercado"}
         form = RegisterListForm(data=form_data)
         if form.is_valid():
-            form.save(request=self.mock_request(user=self.user))
+            form.save(request=self.mock_request(user_id=self.user))
             lista = Lista.objects.get(titulo="Compras")
             self.assertEqual(lista.usuario, self.user)
 
-    def mock_request(self, user):
+    def mock_request(self, user_id):
         """Simula objeto request com sessão de usuário"""
         class MockRequest:
-            session = {"user": user.id}
+            user = user_id
         return MockRequest()
 
 class RegisterTaskFormTest(TestCase):
