@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block CSS %}
+{{ block.super }} <!-- Importa o CSS do base.html -->
+<style>
+    /* Estilos para garantir que os campos do formulário Django (com .form-control) se alinhem com o Tailwind */
+    /* Assumindo que seu UserRegistrationForm aplica 'form-control' aos widgets, como nos exemplos anteriores */
+    .form-control {
+        @apply block w-full px-4 py-3 mb-1 text-base font-normal text-slate-700 bg-white bg-clip-padding border border-solid border-slate-300 rounded-lg transition ease-in-out m-0 focus:text-slate-700 focus:bg-white focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200;
+    }
+    /* Placeholder styling for better visibility */
+    .form-control::placeholder {
+        @apply text-slate-400 opacity-100;
+    }
+
+    /* Ajuste para o espaçamento do label quando o campo do formulário é renderizado */
+    label + input.form-control,
+    label + div > input.form-control { /* Para casos onde o widget pode estar em um div */
+        @apply mt-1; /* Adiciona uma pequena margem superior ao input se houver um label antes dele */
+    }
+</style>
+{% endblock CSS %}
+
+{% block content %}
+<div class="min-h-[calc(100vh-150px)] flex flex-col items-center justify-center bg-slate-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8 bg-white p-8 sm:p-10 rounded-xl shadow-2xl">
+        <div>
+            <h1 class="mt-6 text-center text-3xl sm:text-4xl font-extrabold text-slate-800">
+                Crie sua Conta
+            </h1>
+            <p class="mt-2 text-center text-sm text-slate-600">
+                É rápido e fácil. Comece a organizar suas tarefas agora mesmo!
+            </p>
+        </div>
+        
+        <hr class="border-slate-200">
+
+        <form class="mt-8 space-y-6" method="POST">
+            {% csrf_token %}
+            
+            <div>
+                <label for="{{ form.username.id_for_label }}" class="block text-sm font-medium text-slate-700">
+                    Nome de Usuário
+                </label>
+                {{ form.username }}
+                {% if form.username.errors %}
+                    {% for error in form.username.errors %}
+                        <p class="mt-1 text-xs text-red-600">{{ error }}</p>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <div>
+                <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-slate-700">
+                    Email
+                </label>
+                {{ form.email }}
+                {% if form.email.errors %}
+                    {% for error in form.email.errors %}
+                        <p class="mt-1 text-xs text-red-600">{{ error }}</p>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            
+            <div>
+                <label for="{{ form.password.id_for_label }}" class="block text-sm font-medium text-slate-700">
+                    Senha
+                </label>
+                {{ form.password }}
+                {% if form.password.errors %}
+                    {% for error in form.password.errors %}
+                        <p class="mt-1 text-xs text-red-600">{{ error }}</p>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <!-- Se você tiver um campo de confirmação de senha no seu form.py (ex: password_confirm), adicione-o aqui:
+            <div>
+                <label for="{{ form.password_confirm.id_for_label }}" class="block text-sm font-medium text-slate-700">
+                    Confirmar Senha
+                </label>
+                {{ form.password_confirm }}
+                {% if form.password_confirm.errors %}
+                    {% for error in form.password_confirm.errors %}
+                        <p class="mt-1 text-xs text-red-600">{{ error }}</p>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            -->
+            
+            {% if form.non_field_errors %}
+                <div class="my-4">
+                    {% for error in form.non_field_errors %}
+                        <p class="text-sm text-red-600 bg-red-50 p-3 rounded-md">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div>
+                <button type="submit" class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+                    <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                        <svg class="h-5 w-5 text-indigo-500 group-hover:text-indigo-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                          <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                        </svg>
+                    </span>
+                    Cadastrar
+                </button>
+            </div>
+        </form>
+
+        <div class="text-center text-sm text-slate-500 mt-6">
+            Já tem uma conta?
+            <a href="{% url 'login' %}" class="font-medium text-indigo-600 hover:text-indigo-500">
+                Faça login aqui
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock content %}

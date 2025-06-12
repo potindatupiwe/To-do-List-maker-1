@@ -1,0 +1,202 @@
+{% load static %}
+{% load bootstrap5 %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="Um aplicativo simples de lista de tarefas." />
+        <meta name="author" content="Seu Nome/Nome do App" />
+        <title>To-do List Pro</title>
+        
+        <!-- Tailwind CSS -->
+        <script src="https://cdn.tailwindcss.com"></script>
+        
+        <!-- Bootstrap CSS (Ainda necessário para {% bootstrap_css %} e {% bootstrap_javascript %}) -->
+        {% bootstrap_css %}
+        
+        <!-- Google Fonts (Exemplo: Inter e Pacifico para um toque de personalidade) -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Pacifico&display=swap" rel="stylesheet">
+
+        <!-- Bloco CSS customizado -->
+        {% block CSS %}
+        <link rel='stylesheet' href="{% static 'style.css' %}">
+        {% endblock CSS %}
+
+        <style>
+            body {
+                font-family: 'Inter', sans-serif;
+                background-color: #f0f2f5; /* Um cinza um pouco mais suave */
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
+            }
+            .content-wrapper {
+                flex-grow: 1;
+            }
+            .navbar-brand-custom {
+                font-family: 'Pacifico', cursive; /* Fonte cursiva para a marca */
+                font-size: 1.75rem; /* Tamanho maior para a marca */
+            }
+            /* Estilos para as mensagens do Django, com um toque mais moderno */
+            .django-messages-container {
+                position: fixed;
+                bottom: 1.5rem; /* 24px */
+                right: 1.5rem; /* 24px */
+                z-index: 50;
+                width: 100%;
+                max-width: 24rem; /* 384px */
+            }
+            .django-message {
+                display: flex;
+                align-items: center;
+                padding: 1rem; /* 16px */
+                margin-bottom: 0.75rem; /* 12px */
+                border-radius: 0.5rem; /* 8px */
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+                color: white;
+            }
+            .django-message.success { background-color: #28a745; /* Verde Bootstrap success */ }
+            .django-message.error, .django-message.danger { background-color: #dc3545; /* Vermelho Bootstrap danger */ }
+            .django-message.warning { background-color: #ffc107; color: #212529; /* Amarelo Bootstrap warning com texto escuro */ }
+            .django-message.info { background-color: #17a2b8; /* Azul Bootstrap info */ }
+            .django-message-icon {
+                margin-right: 0.75rem; /* 12px */
+            }
+            .django-message-close {
+                margin-left: auto;
+                background: transparent;
+                border: none;
+                color: inherit; /* Herda a cor do texto da mensagem para melhor contraste */
+                opacity: 0.8;
+                cursor: pointer;
+            }
+            .django-message-close:hover {
+                opacity: 1;
+            }
+
+            /* Removendo sublinhado padrão de links na navbar e aplicando transição */
+            .nav-link {
+                text-decoration: none !important;
+                transition: color 0.2s ease-in-out;
+            }
+            .nav-link:hover {
+                color: #adb5bd !important; /* Um cinza claro para hover */
+            }
+            .nav-link.active {
+                 color: #ffffff !important; /* Branco para o link ativo */
+                 font-weight: 600; /* Semi-bold para o link ativo */
+            }
+
+            /* Estilo para botões, se você for usar botões customizados */
+            .btn-custom-primary {
+                background-color: #007bff; /* Azul primário do Bootstrap */
+                color: white;
+                padding: 0.625rem 1.25rem; /* 10px 20px */
+                border-radius: 0.375rem; /* 6px */
+                font-weight: 500;
+                transition: background-color 0.2s ease-in-out;
+            }
+            .btn-custom-primary:hover {
+                background-color: #0056b3; /* Azul mais escuro no hover */
+            }
+        </style>
+    </head>
+    
+    <body>
+        
+        <!-- Navbar Repaginada -->
+        <nav class="bg-gradient-to-r from-slate-900 to-slate-700 shadow-lg sticky top-0 z-40">
+            <div class="container mx-auto px-4 lg:px-5 py-3">
+                <div class="flex justify-between items-center">
+                    <a class="navbar-brand-custom text-white" href="{% url "index" %}">To-do List Pro</a>
+                    
+                    <!-- Botão Toggler para Mobile (usando classes do Bootstrap para funcionalidade, estilizado com Tailwind) -->
+                    <button class="lg:hidden navbar-toggler text-white focus:outline-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                    </button>
+                    
+                    <!-- Links da Navbar -->
+                    <div class="collapse navbar-collapse flex-grow-0" id="navbarSupportedContent">
+                        <ul class="navbar-nav ms-auto lg:flex lg:flex-row lg:items-center lg:space-x-4 text-sm">
+                            {% block logout %}
+                            {% endblock logout %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Conteúdo Principal -->
+        <div class="content-wrapper container mx-auto px-4 py-8 lg:py-12">
+            {% block header %}
+            <!-- Bloco de cabeçalho opcional -->
+            <header class="mb-8 text-center">
+                <h1 class="text-4xl font-bold text-slate-800">Sua Lista de Tarefas Inteligente</h1>
+                <p class="text-lg text-slate-600 mt-2">Organize seu dia com facilidade e estilo.</p>
+            </header>
+            {% endblock header %}
+
+            {% block content %}
+            <!-- Conteúdo padrão se o bloco 'content' não for preenchido -->
+            <div class="bg-white p-6 md:p-8 rounded-xl shadow-xl max-w-2xl mx-auto">
+                <h2 class="text-2xl font-semibold text-slate-700 mb-6">Bem-vindo(a)!</h2>
+                <p class="text-slate-600 leading-relaxed">
+                    Este é o espaço principal da sua aplicação. Aqui você poderá gerenciar suas tarefas.
+                    Use os blocos Django  para inserir o conteúdo específico de cada página.
+                </p>
+                <div class="mt-6">
+                    <a href="#" class="btn-custom-primary inline-block">Começar Agora</a>
+                </div>
+            </div>
+            {% endblock  %}
+        </div>
+
+        <!-- Mensagens do Django -->
+        {% if messages %}
+        <div class="django-messages-container">
+            {% for message in messages %}
+            <div class="django-message {{ message.tags }} flex items-center justify-between p-4 mb-3 rounded-lg shadow-lg" role="alert">
+                <div>
+                    {% if message.tags == 'success' %}
+                    <span class="django-message-icon">
+                        <svg class="w-5 h-5 inline mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                    </span>
+                    {% elif message.tags == 'error' or message.tags == 'danger' %}
+                    <span class="django-message-icon">
+                         <svg class="w-5 h-5 inline mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg>
+                    </span>
+                    {% elif message.tags == 'warning' %}
+                     <span class="django-message-icon">
+                        <svg class="w-5 h-5 inline mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8.257 3.099c.636-1.179 2.244-1.179 2.88 0l6.173 11.422c.636 1.179-.173 2.652-1.44 2.652H3.524c-1.267 0-2.076-1.473-1.44-2.652L8.257 3.099zM10 6a1 1 0 011 1v4a1 1 0 11-2 0V7a1 1 0 011-1zm-1 8a1 1 0 100 2 1 1 0 000-2z" clip-rule="evenodd"></path></svg>
+                    </span>
+                    {% elif message.tags == 'info' %}
+                     <span class="django-message-icon">
+                        <svg class="w-5 h-5 inline mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
+                    </span>
+                    {% endif %}
+                    {{ message }}
+                </div>
+                <button type="button" class="django-message-close" onclick="this.parentElement.style.display='none';" aria-label="Fechar">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Rodapé -->
+        <footer class="bg-slate-800 text-slate-300 text-center p-6 mt-auto shadow-inner">
+            <div class="container mx-auto">
+                <p>&copy; {% now "Y" %} To-do List Pro. Todos os direitos reservados.</p>
+                <p class="text-sm mt-1">Desenvolvido com <span class="text-sky-400">Django</span> e <span class="text-teal-400">Tailwind CSS</span>.</p>
+            </div>
+        </footer>
+
+        <!-- Bootstrap JS Bundle (necessário para o toggler da navbar e outros componentes Bootstrap que você possa usar) -->
+        {% bootstrap_javascript %}
+    </body>
+</html>

@@ -1,0 +1,21 @@
+.content{
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    height: 75vh;
+}
+
+.box{
+    text-align: center;
+    font-size:larger;
+    color: #004aad;
+}
+
+.content img{
+    width: 50%;
+    
+}
+
+.image{
+    width: 15%;
+}
